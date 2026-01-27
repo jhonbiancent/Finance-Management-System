@@ -47,6 +47,9 @@ services:
       - "5173:5173"
     depends_on:
       - backend
+    volumes:
+      - ./frontend:/app             # Mirror your laptop folder to the container folder
+      - /app/node_modules           # CRITICAL: Do NOT mirror node_modules (let the container manage its own dependencies)
     networks:
       - finance-network
 
