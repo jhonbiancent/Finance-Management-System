@@ -22,7 +22,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Disable CSRF for development/API usage
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/**").permitAll() // Allow all API calls
-                .anyRequest().permitALL()
+                .anyRequest().permitAll()
             );
         return http.build();
     }

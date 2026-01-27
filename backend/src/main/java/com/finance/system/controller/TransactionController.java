@@ -30,11 +30,13 @@ public class TransactionController {
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
 
+        transaction.setOrNumber(transactionDetails.getOrNumber());
         transaction.setDescription(transactionDetails.getDescription());
         transaction.setAmount(transactionDetails.getAmount());
         transaction.setDate(transactionDetails.getDate());
         transaction.setType(transactionDetails.getType());
         transaction.setCategory(transactionDetails.getCategory());
+        transaction.setStatus(transactionDetails.getStatus());
 
         return transactionRepository.save(transaction);
     }

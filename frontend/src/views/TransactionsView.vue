@@ -12,9 +12,9 @@ const currentTransaction = ref(null)
 
 // Mock data
 const mockData = [
-  { id: 1, date: '2026-01-20', description: 'Office Supplies', category: 'Operations', amount: 150.00, type: 'EXPENSE' },
-  { id: 2, date: '2026-01-21', description: 'Client Payment', category: 'Sales', amount: 5000.00, type: 'INCOME' },
-  { id: 3, date: '2026-01-22', description: 'Software License', category: 'IT', amount: 299.99, type: 'EXPENSE' },
+  { id: 1, orNumber: 'OR-001', date: '2026-01-20', description: 'Office Supplies', category: 'Operations', amount: 150.00, type: 'EXPENSE', status: 'APPROVED' },
+  { id: 2, orNumber: 'OR-002', date: '2026-01-21', description: 'Client Payment', category: 'Sales', amount: 5000.00, type: 'INCOME', status: 'APPROVED' },
+  { id: 3, orNumber: 'OR-003', date: '2026-01-22', description: 'Software License', category: 'IT', amount: 299.99, type: 'EXPENSE', status: 'PENDING' },
 ]
 
 const API_URL = 'http://localhost:8080/api/transactions'
@@ -102,16 +102,19 @@ onMounted(() => {
           <thead>
             <tr>
               <th>Date</th>
+              <th>OR Number</th>
               <th>Description</th>
               <th>Category</th>
               <th>Type</th>
               <th class="text-right">Amount</th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="t in transactions" :key="t.id">
               <td>{{ t.date }}</td>
+              <td>{{ t.orNumber }}</td>
               <td>{{ t.description }}</td>
               <td><span class="badge">{{ t.category }}</span></td>
               <td>
@@ -120,13 +123,14 @@ onMounted(() => {
                 </span>
               </td>
               <td class="text-right">{{ t.amount.toFixed(2) }}</td>
+              <td>{{ t.status }}</td>
               <td class="actions-cell">
                 <button class="btn-icon" @click="openEditTransactionModal(t)">✏️</button>
                 <button class="btn-icon" @click="handleDelete(t.id)">🗑️</button>
               </td>
             </tr>
             <tr v-if="transactions.length === 0 && !loading">
-              <td colspan="6" class="text-center">No transactions found.</td>
+              <td colspan="8" class="text-center">No transactions found.</td>
             </tr>
           </tbody>
         </table>
@@ -172,11 +176,12 @@ onMounted(() => {
 }
 
 .spreadsheet-container {
-  background: white;
+  background: var(--card-bg);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   overflow: hidden;
   border: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
 .spreadsheet {
@@ -189,12 +194,13 @@ onMounted(() => {
   padding: 1rem;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
 }
 
 .spreadsheet th {
-  background-color: #f8f9fa;
+  background-color: var(--bg-color);
   font-weight: 600;
-  color: #555;
+  color: var(--text-muted);
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.5px;
@@ -205,7 +211,7 @@ onMounted(() => {
 }
 
 .spreadsheet tr:hover {
-  background-color: #f8f9fa;
+  background-color: var(--bg-color);
 }
 
 .text-right { text-align: right; }
@@ -217,15 +223,15 @@ onMounted(() => {
   font-size: 0.75rem;
   font-weight: 600;
 }
-.status.income { background-color: #e8f5e9; color: #27ae60; }
-.status.expense { background-color: #ffebee; color: #c0392b; }
+.status.income { background-color: var(--success-bg); color: var(--success-text); }
+.status.expense { background-color: var(--error-bg); color: var(--error-text); }
 
 .badge {
-  background-color: #edf2f7;
+  background-color: var(--input-bg);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.8rem;
-  color: #4a5568;
+  color: var(--text-color);
 }
 
 .banner {
@@ -235,9 +241,9 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 .banner.error {
-  background-color: #fff5f5;
-  color: #c53030;
-  border: 1px solid #feb2b2;
+  background-color: var(--error-bg);
+  color: var(--error-text);
+  border: 1px solid var(--error-text);
 }
 
 .btn-primary {
@@ -248,7 +254,7 @@ onMounted(() => {
 .btn-secondary {
   background-color: transparent;
   border: 1px solid #ccc;
-  color: #333;
+  color: var(--text-color);
   margin-left: 0.5rem;
 }
 .btn-icon {
