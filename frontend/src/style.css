@@ -1,0 +1,105 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  
+  /* Light Mode Colors */
+  --bg-color: #f8f9fa;
+  --sidebar-bg: #2c3e50;
+  --sidebar-text: #ecf0f1;
+  --header-bg: #ffffff;
+  --card-bg: #ffffff;
+  --border-color: #dee2e6;
+  --text-color: #333333;
+  --text-muted: #666666;
+  --input-bg: #ffffff;
+  --input-border: #dddddd;
+  
+  /* Status Colors (Same for both usually) */
+  --success-bg: #e8f5e9;
+  --success-text: #27ae60;
+  --error-bg: #ffebee;
+  --error-text: #c0392b;
+}
+
+body.dark {
+  /* Dark Mode Colors */
+  --bg-color: #1a1a1a;
+  --header-bg: #242424;
+  --card-bg: #242424;
+  --border-color: #404040;
+  --text-color: #e0e0e0;
+  --text-muted: #a0a0a0;
+  --input-bg: #2a2a2a;
+  --input-border: #404040;
+  
+  /* Sidebar can stay same or go darker */
+  --sidebar-bg: #111111;
+  
+  --success-bg: rgba(39, 174, 96, 0.2);
+  --success-text: #2ecc71;
+  --error-bg: rgba(192, 57, 43, 0.2);
+  --error-text: #e74c3c;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Global Component Overrides for Dark Mode Support */
+
+/* Cards & Containers */
+.card, .settings-card, .spreadsheet-container, .modal-content, .report-section {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Inputs */
+input, select {
+  background-color: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--text-color) !important;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-color) !important;
+}
+
+/* Tables */
+th {
+  background-color: var(--bg-color) !important;
+  color: var(--text-muted) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+td {
+  border-bottom-color: var(--border-color) !important;
+}
+tr:hover {
+  background-color: var(--bg-color) !important; /* Slightly distinct from card bg */
+}
+
+/* Modal */
+.modal-header {
+  border-bottom-color: var(--border-color) !important;
+}
+.close-btn {
+  color: var(--text-color) !important;
+}
