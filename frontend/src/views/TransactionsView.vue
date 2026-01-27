@@ -1,8 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import TransactionModal from '../components/TransactionModal.vue'
-// Axios Integration: Import the pre-configured Axios instance
-import apiClient from '@/api' 
 
 const transactions = ref([])
 const loading = ref(false)
@@ -12,19 +10,21 @@ const isModalOpen = ref(false)
 const isEditing = ref(false)
 const currentTransaction = ref(null)
 
-// Mock data (remains for fallback)
+// Mock data
 const mockData = [
   { id: 1, orNumber: 'OR-001', date: '2026-01-20', description: 'Office Supplies', category: 'Operations', amount: 150.00, type: 'EXPENSE', status: 'APPROVED' },
   { id: 2, orNumber: 'OR-002', date: '2026-01-21', description: 'Client Payment', category: 'Sales', amount: 5000.00, type: 'INCOME', status: 'APPROVED' },
   { id: 3, orNumber: 'OR-003', date: '2026-01-22', description: 'Software License', category: 'IT', amount: 299.99, type: 'EXPENSE', status: 'PENDING' },
 ]
 
+const API_URL = 'http://localhost:8080/api/transactions'
+
 const fetchTransactions = async () => {
   loading.value = true
   try {
-    // Axios Integration: Using apiClient.get for fetching data
-    const response = await apiClient.get('/transactions')
-    transactions.value = response.data
+    const response = await fetch(API_URL)
+    if (!response.ok) throw new Error('Network response was not ok')
+    transactions.value = await response.json()
     error.value = null
   } catch (err) {
     console.warn('Backend not reachable, using mock data:', err)
@@ -49,27 +49,31 @@ const openEditTransactionModal = (transaction) => {
 
 const handleSave = async (formData) => {
   try {
-    // Axios Integration: Using apiClient.put for updates and apiClient.post for new creations
-    if (isEditing.value) {
-      await apiClient.put(`/transactions/${currentTransaction.value.id}`, formData)
-    } else {
-      await apiClient.post('/transactions', formData)
-    }
+    const method = isEditing.value ? 'PUT' : 'POST'
+    const url = isEditing.value ? `${API_URL}/${currentTransaction.value.id}` : API_URL
+    
+    const response = await fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    })
+
+    if (!response.ok) throw new Error('Failed to save')
     await fetchTransactions()
     isModalOpen.value = false
   } catch (e) {
-    alert('Error saving transaction: ' + (e.response?.data?.message || e.message))
+    alert('Error saving transaction: ' + e.message)
   }
 }
 
 const handleDelete = async (id) => {
   if (!confirm('Are you sure you want to delete this transaction?')) return
   try {
-    // Axios Integration: Using apiClient.delete for deleting data
-    await apiClient.delete(`/transactions/${id}`)
+    const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+    if (!response.ok) throw new Error('Failed to delete')
     await fetchTransactions()
   } catch (e) {
-    alert('Error deleting transaction: ' + (e.response?.data?.message || e.message))
+    alert('Error deleting transaction: ' + e.message)
   }
 }
 
