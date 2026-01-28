@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import TransactionModal from '../components/TransactionModal.vue'
+import api from '@/services/api'
 
 const transactions = ref([])
 const loading = ref(false)
@@ -10,26 +11,15 @@ const isModalOpen = ref(false)
 const isEditing = ref(false)
 const currentTransaction = ref(null)
 
-// Mock data
-const mockData = [
-  { id: 1, orNumber: 'OR-001', date: '2026-01-20', description: 'Office Supplies', category: 'Operations', amount: 150.00, type: 'EXPENSE', status: 'APPROVED' },
-  { id: 2, orNumber: 'OR-002', date: '2026-01-21', description: 'Client Payment', category: 'Sales', amount: 5000.00, type: 'INCOME', status: 'APPROVED' },
-  { id: 3, orNumber: 'OR-003', date: '2026-01-22', description: 'Software License', category: 'IT', amount: 299.99, type: 'EXPENSE', status: 'PENDING' },
-]
-
-const API_URL = 'http://localhost:8080/api/transactions'
-
 const fetchTransactions = async () => {
   loading.value = true
   try {
-    const response = await fetch(API_URL)
-    if (!response.ok) throw new Error('Network response was not ok')
-    transactions.value = await response.json()
+    const response = await api.getTransactions()
+    transactions.value = response.data
     error.value = null
   } catch (err) {
-    console.warn('Backend not reachable, using mock data:', err)
-    transactions.value = mockData
-    error.value = 'Backend unreachable. Showing mock data.'
+    console.error('Failed to fetch transactions:', err)
+    error.value = 'Failed to fetch transactions. Please try again later.'
   } finally {
     loading.value = false
   }
@@ -49,16 +39,11 @@ const openEditTransactionModal = (transaction) => {
 
 const handleSave = async (formData) => {
   try {
-    const method = isEditing.value ? 'PUT' : 'POST'
-    const url = isEditing.value ? `${API_URL}/${currentTransaction.value.id}` : API_URL
-    
-    const response = await fetch(url, {
-      method: method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-
-    if (!response.ok) throw new Error('Failed to save')
+    if (isEditing.value) {
+      await api.updateTransaction(currentTransaction.value.id, formData)
+    } else {
+      await api.createTransaction(formData)
+    }
     await fetchTransactions()
     isModalOpen.value = false
   } catch (e) {
@@ -69,8 +54,7 @@ const handleSave = async (formData) => {
 const handleDelete = async (id) => {
   if (!confirm('Are you sure you want to delete this transaction?')) return
   try {
-    const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' })
-    if (!response.ok) throw new Error('Failed to delete')
+    await api.deleteTransaction(id)
     await fetchTransactions()
   } catch (e) {
     alert('Error deleting transaction: ' + e.message)
