@@ -20,14 +20,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="isLoginPage">
+  <div v-if="isLoginPage" class="login-page">
     <router-view />
   </div>
   <div v-else class="layout">
     <!-- Sidebar / Drawer -->
     <aside class="sidebar">
       <div class="brand">
-        <h2>FinancePortal</h2>
+        <img class="logo" src="/quirao-logo.jpg" alt="QGC Logo">
       </div>
       <nav class="nav-menu">
         <router-link to="/" class="nav-item" :class="{ active: isActive('/') }">
@@ -62,6 +62,11 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.login-page{
+  height:100vh;
+  width:100vw;
+  background-color:black;
+}
 .layout {
   display: flex;
   height: 100vh;
@@ -82,7 +87,10 @@ onMounted(() => {
   padding: 1.5rem;
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
-
+.logo{
+  width:100%;
+  height:auto;
+}
 .brand h2 {
   margin: 0;
   font-size: 1.25rem;
@@ -123,6 +131,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 1rem;
+  color:white;
 }
 
 .avatar {

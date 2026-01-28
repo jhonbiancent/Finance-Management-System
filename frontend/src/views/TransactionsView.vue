@@ -69,7 +69,11 @@ onMounted(() => {
 <template>
   <div class="view-container">
     <header class="top-bar">
-      <h1>Transactions</h1>
+      <form class="search-bar">
+        🔍
+        <input type="text" placeholder="Search">
+        ☰
+      </form>
       <div class="actions">
         <button class="btn-primary" @click="openNewTransactionModal">+ New Entry</button>
         <button class="btn-secondary">Export</button>
@@ -158,7 +162,23 @@ onMounted(() => {
   padding: 2rem;
   overflow-y: auto;
 }
-
+/*------search bar------*/
+.search-bar{
+  width:50%;
+  height:100%;
+  padding:1%;
+  background-color:var(--bg-color);
+  border-radius:1rem;
+  display: flex;
+  align-items:center;
+  justify-content:start;
+  gap:2%;
+}
+.search-bar input{
+  height:100%;
+  width:70%;
+  border:none;
+}
 .spreadsheet-container {
   background: var(--card-bg);
   border-radius: 8px;
@@ -207,8 +227,8 @@ onMounted(() => {
   font-size: 0.75rem;
   font-weight: 600;
 }
-.status.income { background-color: var(--success-bg); color: var(--success-text); }
-.status.expense { background-color: var(--error-bg); color: var(--error-text); }
+//.status.income { background-color: var(--success-bg); color: var(--success-text); }
+//.status.expense { background-color: var(--error-bg); color: var(--error-text); }
 
 .badge {
   background-color: var(--input-bg);

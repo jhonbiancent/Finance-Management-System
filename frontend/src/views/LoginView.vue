@@ -1,24 +1,31 @@
 <template>
-  <div class="login-view">
-    <h1>Login</h1>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" v-model="username" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" required />
-      </div>
-      <button type="submit" :disabled="loading">
-        {{ loading ? 'Logging in...' : 'Login' }}
-      </button>
-      <p v-if="error" class="error">{{ error }}</p>
-    </form>
-    <div class="register-link">
-      <router-link to="/register">Don't have an account? Register</router-link>
+  <div class="login-page">
+    <div class="logo-container">
+      <img class="logo" src="/quirao-logo.jpg" alt="QGC Logo"/>
     </div>
+    <div class="login-form-container">
+      <div class="login-view">
+        <h1>LOGIN ACCOUNT</h1>
+        <form @submit.prevent="handleLogin">
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" v-model="username" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" v-model="password" required />
+          </div>
+          <button type="submit" :disabled="loading">
+            {{ loading ? 'Logging in...' : 'Login' }}
+          </button>
+          <p v-if="error" class="error">{{ error }}</p>
+        </form>
+
+      </div>
+    </div>
+
   </div>
+
 </template>
 
 <script setup>
@@ -50,13 +57,42 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
+.login-page{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.logo-container{
+  height:100%;
+  width:60%;
+  background-color:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.login-form-container{
+  border-top-left-radius:5rem;
+  width:40%;
+  height:100%;
+  background-color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.logo{
+  height:70%;
+  width:auto;
+}
 .login-view {
   max-width: 400px;
   margin: 50px auto;
   padding: 2rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-top-left-radius: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color:white;
 }
 h1 {
   text-align: center;
@@ -78,7 +114,7 @@ input {
 button {
   width: 100%;
   padding: 0.75rem;
-  background-color: #007bff;
+  background-color: black;
   color: white;
   border: none;
   border-radius: 4px;
@@ -93,8 +129,5 @@ button:disabled {
   margin-top: 1rem;
   text-align: center;
 }
-.register-link {
-  text-align: center;
-  margin-top: 1rem;
-}
+
 </style>

@@ -5,8 +5,8 @@
   
   /* Light Mode Colors */
   --bg-color: #f8f9fa;
-  --sidebar-bg: #2c3e50;
-  --sidebar-text: #ecf0f1;
+  --sidebar-bg: black;
+  --sidebar-text: black;
   --header-bg: #ffffff;
   --card-bg: #ffffff;
   --border-color: #dee2e6;
