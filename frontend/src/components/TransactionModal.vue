@@ -9,12 +9,14 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'submit'])
 
-const form = reactive({
+  const form = reactive({
+  orNumber: '',
   description: '',
   amount: '',
   date: '',
   type: 'EXPENSE',
-  category: ''
+  category: '',
+  status: 'PENDING'
 })
 
 // Reset or Populate form when modal opens
@@ -28,11 +30,13 @@ watch(() => props.isOpen, (newVal) => {
       }
     } else {
       // Reset
+      form.orNumber = ''
       form.description = ''
       form.amount = ''
       form.date = new Date().toISOString().split('T')[0]
       form.type = 'EXPENSE'
       form.category = ''
+      form.status = 'PENDING'
     }
   }
 })
@@ -58,6 +62,11 @@ const handleSubmit = () => {
         </div>
 
         <div class="form-group">
+          <label>OR Number</label>
+          <input type="text" v-model="form.orNumber" placeholder="e.g. OR-001" required />
+        </div>
+
+        <div class="form-group">
           <label>Description</label>
           <input type="text" v-model="form.description" placeholder="e.g. Office Supplies" required />
         </div>
@@ -79,13 +88,21 @@ const handleSubmit = () => {
           <label>Category</label>
           <input type="text" v-model="form.category" placeholder="e.g. Operations, Sales" required />
         </div>
+        
+        <div class="form-group">
+          <label>Status</label>
+          <select v-model="form.status">
+            <option value="PENDING">Pending</option>
+            <option value="APPROVED">Approved</option>
+            <option value="REJECTED">Rejected</option>
+          </select>
+        </div>
 
         <div class="modal-actions">
           <button type="button" class="btn-secondary" @click="$emit('close')">Cancel</button>
           <button type="submit" class="btn-primary">Save</button>
         </div>
-      </form>
-    </div>
+      </form>    </div>
   </div>
 </template>
 
