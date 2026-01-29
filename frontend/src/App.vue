@@ -2,9 +2,14 @@
 import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTheme } from './composables/useTheme'
+import { useAuthStore } from './stores/auth';
 
 const route = useRoute()
 const { initTheme } = useTheme()
+const authStore = useAuthStore()
+
+const isLoginPage = computed(() => route.name === 'Login')
+const user = computed(() => authStore.user)
 
 // Helper to determine active class
 const isActive = (path) => route.path === path
@@ -15,7 +20,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="layout">
+  <div v-if="isLoginPage">
+    <router-view />
+  </div>
+  <div v-else class="layout">
     <!-- Sidebar / Drawer -->
     <aside class="sidebar">
       <div class="brand">
@@ -35,12 +43,14 @@ onMounted(() => {
           <span class="icon">⚙️</span> Settings
         </router-link>
       </nav>
+
       <div class="user-profile">
-        <div class="avatar">U</div>
+        <div class="avatar">{{ user?.sub?.charAt(0).toUpperCase() }}</div>
         <div class="info">
-          <p class="name">User Name</p>
-          <p class="role">Finance Staff</p>
+          <p class="name">{{ user?.sub }}</p>
+          <p class="role">{{ user?.roles[0] }}</p>
         </div>
+        <button @click="authStore.logout()" class="logout-btn" title="Logout">↩️</button>
       </div>
     </aside>
 
@@ -59,7 +69,6 @@ onMounted(() => {
   overflow: hidden;
 }
 
-/* Sidebar */
 .sidebar {
   width: 260px;
   background-color: var(--sidebar-bg);
@@ -97,7 +106,7 @@ onMounted(() => {
   transition: all 0.2s;
 }
 
-.nav-item:hover, .nav-item.active {
+.nav-item:hover, .router-link-exact-active {
   background-color: rgba(255,255,255,0.1);
   color: #fff;
   border-right: 4px solid #3498db;
@@ -127,16 +136,37 @@ onMounted(() => {
   font-weight: bold;
 }
 
+.info {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .info p {
   margin: 0;
   font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .info .role {
   color: rgba(255,255,255,0.5);
   font-size: 0.75rem;
 }
 
-/* Main Content */
+.logout-btn {
+    background: none;
+    border: none;
+    color: var(--sidebar-text);
+    cursor: pointer;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.logout-btn:hover {
+    opacity: 1;
+}
+
 .main-content {
   flex: 1;
   display: flex;
@@ -145,3 +175,4 @@ onMounted(() => {
   overflow: hidden;
 }
 </style>
+
