@@ -18,7 +18,7 @@
           <p class="value expense">-$1,850.00</p>
         </div>
       </div>
-      
+
       <div class="placeholder-chart">
         <p>📊 Chart Visualization Placeholder</p>
       </div>
@@ -35,8 +35,16 @@
 
 .top-bar {
   background-color: var(--header-bg);
-  padding: 1rem 2rem;
+  height: 64px; /* Fixed height to match sidebar */
+  padding: 0 2rem;
   border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+}
+
+.top-bar h1 {
+  margin: 0; /* Remove default margin for perfect centering */
+  font-size: 1.5rem;
 }
 
 .content-area {
