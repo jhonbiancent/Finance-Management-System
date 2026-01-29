@@ -30,15 +30,15 @@ export default {
     return apiClient.post('/v1/auth/register', user);
   },
   getTransactions() {
-    return apiClient.get('/transactions');
+    return apiClient.get('/v1/transactions');
   },
   createTransaction(transaction) {
-    return apiClient.post('/transactions', transaction);
+    return apiClient.post('/v1/transactions', transaction);
   },
   updateTransaction(id, transaction) {
-    return apiClient.put(`/transactions/${id}`, transaction);
+    return apiClient.put(`/v1/transactions/${id}`, transaction);
   },
   deleteTransaction(id) {
-    return apiClient.delete(`/transactions/${id}`);
+    return apiClient.delete(`/v1/transactions/${id}`);
   },
 };

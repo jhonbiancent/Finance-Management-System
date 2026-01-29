@@ -13,9 +13,12 @@
       <div class="form-group">
         <label for="role">Role:</label>
         <select id="role" v-model="role" required>
-          <option value="ROLE_MEMBER">Member</option>
-          <option value="ROLE_FINANCE_STAFF">Finance Staff</option>
-          <option value="ROLE_ADMIN">Admin</option>
+          <option value="ROLE_FINANCE_VIEWER">Finance Viewer</option>
+          <option value="ROLE_FINANCE_EDITOR">Finance Editor</option>
+          <option value="ROLE_FINANCE_MANAGER">Finance Manager</option>
+          <option value="ROLE_FINANCE_ADMIN">Finance Admin</option>
+          <option value="ROLE_FINANCE_AUDITOR">Finance Auditor</option>
+          <option value="ROLE_FINANCE_CONTROLLER">Finance Controller</option>
         </select>
       </div>
       <button type="submit" :disabled="loading">
@@ -33,7 +36,7 @@ import { useRouter } from 'vue-router';
 
 const username = ref('');
 const password = ref('');
-const role = ref('ROLE_MEMBER');
+const role = ref('ROLE_FINANCE_VIEWER');
 const loading = ref(false);
 const error = ref(null);
 

@@ -40,7 +40,7 @@ const openEditTransactionModal = (transaction) => {
 const handleSave = async (formData) => {
   try {
     if (isEditing.value) {
-      await api.updateTransaction(currentTransaction.value.id, formData)
+      await api.updateTransaction(currentTransaction.value.transactionId, formData)
     } else {
       await api.createTransaction(formData)
     }
@@ -86,35 +86,41 @@ onMounted(() => {
           <thead>
             <tr>
               <th>Date</th>
-              <th>OR Number</th>
-              <th>Description</th>
-              <th>Category</th>
               <th>Type</th>
-              <th class="text-right">Amount</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Category</th>
+              <th>Payment Method</th>
               <th>Status</th>
+              <th>Beneficiary</th>
+              <th>Reference Number</th>
+              <th>Invoice Number</th>
+              <th>Budget Code</th>
+              <th>Comments</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="t in transactions" :key="t.id">
-              <td>{{ t.date }}</td>
-              <td>{{ t.orNumber }}</td>
+            <tr v-for="t in transactions" :key="t.transactionId">
+              <td>{{ t.checkDate }}</td>
+              <td>{{ t.type }}</td>
               <td>{{ t.description }}</td>
-              <td><span class="badge">{{ t.category }}</span></td>
-              <td>
-                <span :class="['status', t.type === 'INCOME' ? 'income' : 'expense']">
-                  {{ t.type }}
-                </span>
-              </td>
-              <td class="text-right">{{ t.amount.toFixed(2) }}</td>
+              <td>{{ t.amount.toFixed(2) }}</td>
+              <td><span class="badge">{{ t.revenueCategory }}</span></td>
+              <td>{{ t.mode }}</td>
               <td>{{ t.status }}</td>
+              <td>{{ t.bmmiCustomer }}</td>
+              <td>{{ t.checkNumber }}</td>
+              <td>{{ t.invoiceBillingNumber }}</td>
+              <td>{{ t.particulars }}</td>
+              <td>{{ t.remarks }}</td>
               <td class="actions-cell">
                 <button class="btn-icon" @click="openEditTransactionModal(t)">✏️</button>
-                <button class="btn-icon" @click="handleDelete(t.id)">🗑️</button>
+                <button class="btn-icon" @click="handleDelete(t.transactionId)">🗑️</button>
               </td>
             </tr>
             <tr v-if="transactions.length === 0 && !loading">
-              <td colspan="8" class="text-center">No transactions found.</td>
+              <td colspan="13" class="text-center">No transactions found.</td>
             </tr>
           </tbody>
         </table>
@@ -146,6 +152,8 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  gap: 1rem; /* Add some space between items */
 }
 
 .top-bar h1 {
@@ -163,7 +171,7 @@ onMounted(() => {
   background: var(--card-bg);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  overflow: hidden;
+  overflow-x: auto; /* Add horizontal scrolling */
   border: 1px solid var(--border-color);
   color: var(--text-color);
 }

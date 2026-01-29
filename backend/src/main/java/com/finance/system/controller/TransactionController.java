@@ -1,7 +1,7 @@
 package com.finance.system.controller;
 
 import com.finance.system.model.Transaction;
-import com.finance.system.repository.TransactionRepository;
+import com.finance.system.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -9,45 +9,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/transactions")
-@CrossOrigin(origins = "*") 
+@RequestMapping("/api/v1/transactions")
+@CrossOrigin(origins = "*")
 public class TransactionController {
 
+    private final TransactionService transactionService;
+
     @Autowired
-    private TransactionRepository transactionRepository;
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyAuthority('ROLE_FINANCE_ADMIN', 'ROLE_FINANCE_EDITOR', 'ROLE_FINANCE_VIEWER')")
     public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
+        return transactionService.getTransactions();
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'FINANCE_STAFF')")
+    @PreAuthorize("hasAnyAuthority('ROLE_FINANCE_ADMIN', 'ROLE_FINANCE_EDITOR')")
     public Transaction createTransaction(@RequestBody Transaction transaction) {
-        return transactionRepository.save(transaction);
+        return transactionService.createTransaction(transaction);
     }
-    
+
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'FINANCE_STAFF')")
+    @PreAuthorize("hasAnyAuthority('ROLE_FINANCE_ADMIN', 'ROLE_FINANCE_EDITOR')")
     public Transaction updateTransaction(@PathVariable Long id, @RequestBody Transaction transactionDetails) {
-        Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
-
-        transaction.setDescription(transactionDetails.getDescription());
-        transaction.setAmount(transactionDetails.getAmount());
-        transaction.setDate(transactionDetails.getDate());
-        transaction.setType(transactionDetails.getType());
-        transaction.setCategory(transactionDetails.getCategory());
-        transaction.setOrNumber(transactionDetails.getOrNumber());
-        transaction.setStatus(transactionDetails.getStatus());
-
-        return transactionRepository.save(transaction);
+        return transactionService.updateTransaction(id, transactionDetails);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'FINANCE_STAFF')")
+    @PreAuthorize("hasAnyAuthority('ROLE_FINANCE_ADMIN')")
     public void deleteTransaction(@PathVariable Long id) {
-        transactionRepository.deleteById(id);
+        transactionService.deleteTransaction(id);
     }
 }

@@ -3,6 +3,7 @@ package com.finance.system.service;
 import com.finance.system.dto.AuthRequest;
 import com.finance.system.dto.AuthResponse;
 import com.finance.system.dto.RegisterRequest;
+import com.finance.system.model.Role;
 import com.finance.system.model.User;
 import com.finance.system.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,6 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())

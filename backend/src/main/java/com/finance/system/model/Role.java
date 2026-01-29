@@ -1,7 +1,10 @@
 package com.finance.system.model;
 
 public enum Role {
-    ROLE_MEMBER,
-    ROLE_FINANCE_STAFF,
-    ROLE_ADMIN
+    ROLE_FINANCE_VIEWER,
+    ROLE_FINANCE_EDITOR,
+    ROLE_FINANCE_MANAGER,
+    ROLE_FINANCE_ADMIN,
+    ROLE_FINANCE_AUDITOR,
+    ROLE_FINANCE_CONTROLLER
 }
