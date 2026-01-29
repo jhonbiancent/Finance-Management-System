@@ -1,28 +1,33 @@
 <template>
-  <div class="register-view">
-    <h1>Register</h1>
-    <form @submit.prevent="handleRegister">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" v-model="username" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" required />
-      </div>
-      <div class="form-group">
-        <label for="role">Role:</label>
-        <select id="role" v-model="role" required>
-          <option value="ROLE_MEMBER">Member</option>
-          <option value="ROLE_FINANCE_STAFF">Finance Staff</option>
-          <option value="ROLE_ADMIN">Admin</option>
-        </select>
-      </div>
-      <button type="submit" :disabled="loading">
-        {{ loading ? 'Registering...' : 'Register' }}
-      </button>
-      <p v-if="error" class="error">{{ error }}</p>
-    </form>
+  <div class="register-page">
+    <div class="register-view">
+      <h1>Register</h1>
+      <form @submit.prevent="handleRegister">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" v-model="username" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" v-model="password" required />
+        </div>
+        <div class="form-group">
+          <label for="role">Role:</label>
+          <select id="role" v-model="role" required>
+            <option value="ROLE_FINANCE_VIEWER">Finance Viewer</option>
+            <option value="ROLE_FINANCE_EDITOR">Finance Editor</option>
+            <option value="ROLE_FINANCE_MANAGER">Finance Manager</option>
+            <option value="ROLE_FINANCE_ADMIN">Finance Admin</option>
+            <option value="ROLE_FINANCE_AUDITOR">Finance Auditor</option>
+            <option value="ROLE_FINANCE_CONTROLLER">Finance Controller</option>
+          </select>
+        </div>
+        <button type="submit" :disabled="loading">
+          {{ loading ? 'Registering...' : 'Register' }}
+        </button>
+        <p v-if="error" class="error">{{ error }}</p>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -33,7 +38,7 @@ import { useRouter } from 'vue-router';
 
 const username = ref('');
 const password = ref('');
-const role = ref('ROLE_MEMBER');
+const role = ref('ROLE_FINANCE_VIEWER');
 const loading = ref(false);
 const error = ref(null);
 
@@ -60,6 +65,9 @@ const handleRegister = async () => {
 </script>
 
 <style scoped>
+.register-page{
+  width:100%;
+}
 .register-view {
   max-width: 400px;
   margin: 50px auto;

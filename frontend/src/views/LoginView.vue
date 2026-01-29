@@ -1,22 +1,29 @@
 <template>
-  <div class="login-view">
-    <h1>Login</h1>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" v-model="username" required />
+  <div class="login-page">
+    <div class="logo-section">
+      <img :src="qgclogoWide" alt="QGCLogo">
+    </div>
+    <div class="login-section">
+      <div class="login-view">
+        <h1>ACCOUNT LOGIN</h1>
+        <form @submit.prevent="handleLogin">
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" v-model="username" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" v-model="password" required />
+          </div>
+          <button type="submit" :disabled="loading">
+            {{ loading ? 'Logging in...' : 'Login' }}
+          </button>
+          <p v-if="error" class="error">{{ error }}</p>
+        </form>
+        <div class="register-link">
+          <span>Don't have an account?</span><router-link to="/register"> Register</router-link>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" required />
-      </div>
-      <button type="submit" :disabled="loading">
-        {{ loading ? 'Logging in...' : 'Login' }}
-      </button>
-      <p v-if="error" class="error">{{ error }}</p>
-    </form>
-    <div class="register-link">
-      <router-link to="/register">Don't have an account? Register</router-link>
     </div>
   </div>
 </template>
@@ -25,6 +32,7 @@
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import qgclogoWide from '../assets/qgclogo_wide.png';
 
 const username = ref('');
 const password = ref('');
@@ -50,6 +58,30 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
+.login-page{
+  width:100%;
+  height:100vh;
+  display:flex;
+  background-color:black;
+}
+.logo-section{
+  width:60%;
+  display:flex;
+  align-items: center;
+  justify-content:center;
+}
+.logo-section img{
+  width:80%;
+}
+.login-section{
+  width:40%;
+  background-color:white;
+  border-top-left-radius: 5rem;
+  color:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 .login-view {
   max-width: 400px;
   margin: 50px auto;
@@ -61,9 +93,14 @@ const handleLogin = async () => {
 h1 {
   text-align: center;
   margin-bottom: 1.5rem;
+  color:black;
 }
 .form-group {
   margin-bottom: 1rem;
+}
+.form-group input{
+  background-color:white;
+
 }
 label {
   display: block;

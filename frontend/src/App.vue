@@ -115,10 +115,11 @@ onMounted(() => {
   display: flex;
   width: 100%;
   height: 100%;
+  font-size:0.8rem;
 }
 
 .sidebar {
-  width: 260px;
+  width: 15vw;
   background-color: var(--sidebar-bg, #2c3e50);
   color: var(--sidebar-text, #ffffff);
   display: flex;
@@ -169,7 +170,7 @@ onMounted(() => {
 }
 
 .wide-logo {
-  height: 40px;
+  height: 30px;
   width: auto;
   animation: fadeIn 0.3s ease;
   margin-left: 0;
