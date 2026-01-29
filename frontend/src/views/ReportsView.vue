@@ -31,11 +31,17 @@
 
 .top-bar {
   background-color: var(--header-bg);
-  padding: 1rem 2rem;
+  height: 64px; /* Fixed height to match sidebar */
+  padding: 0 2rem;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.top-bar h1 {
+  margin: 0;
+  font-size: 1.5rem;
 }
 
 .content-area {

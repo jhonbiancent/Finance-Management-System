@@ -71,8 +71,8 @@ onMounted(() => {
     <header class="top-bar">
       <h1>Transactions</h1>
       <div class="actions">
-        <button class="btn-primary" @click="openNewTransactionModal">+ New Entry</button>
-        <button class="btn-secondary">Export</button>
+        <button class="btn btn-primary" @click="openNewTransactionModal"><i class="fas fa-plus"></i> New Entry</button>
+        <button class="btn btn-secondary"><i class="fas fa-file-export"></i> Export</button>
       </div>
     </header>
 
@@ -80,53 +80,53 @@ onMounted(() => {
       <div v-if="error" class="banner error">
         {{ error }}
       </div>
-      
+
       <div class="spreadsheet-container">
         <table class="spreadsheet">
           <thead>
-            <tr>
-              <th>Date</th>
-              <th>OR Number</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Type</th>
-              <th class="text-right">Amount</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
+          <tr>
+            <th>Date</th>
+            <th>OR Number</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Type</th>
+            <th class="text-right">Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
           </thead>
           <tbody>
-            <tr v-for="t in transactions" :key="t.id">
-              <td>{{ t.date }}</td>
-              <td>{{ t.orNumber }}</td>
-              <td>{{ t.description }}</td>
-              <td><span class="badge">{{ t.category }}</span></td>
-              <td>
+          <tr v-for="t in transactions" :key="t.id">
+            <td>{{ t.date }}</td>
+            <td>{{ t.orNumber }}</td>
+            <td>{{ t.description }}</td>
+            <td><span class="badge">{{ t.category }}</span></td>
+            <td>
                 <span :class="['status', t.type === 'INCOME' ? 'income' : 'expense']">
                   {{ t.type }}
                 </span>
-              </td>
-              <td class="text-right">{{ t.amount.toFixed(2) }}</td>
-              <td>{{ t.status }}</td>
-              <td class="actions-cell">
-                <button class="btn-icon" @click="openEditTransactionModal(t)">✏️</button>
-                <button class="btn-icon" @click="handleDelete(t.id)">🗑️</button>
-              </td>
-            </tr>
-            <tr v-if="transactions.length === 0 && !loading">
-              <td colspan="8" class="text-center">No transactions found.</td>
-            </tr>
+            </td>
+            <td class="text-right">{{ t.amount.toFixed(2) }}</td>
+            <td>{{ t.status }}</td>
+            <td class="actions-cell">
+              <button class="btn-icon" @click="openEditTransactionModal(t)" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+              <button class="btn-icon" @click="handleDelete(t.id)" title="Delete"><i class="fas fa-trash-alt"></i></button>
+            </td>
+          </tr>
+          <tr v-if="transactions.length === 0 && !loading">
+            <td colspan="8" class="text-center">No transactions found.</td>
+          </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <TransactionModal 
-      :is-open="isModalOpen"
-      :is-editing="isEditing"
-      :initial-data="currentTransaction"
-      @close="isModalOpen = false"
-      @submit="handleSave"
+    <TransactionModal
+        :is-open="isModalOpen"
+        :is-editing="isEditing"
+        :initial-data="currentTransaction"
+        @close="isModalOpen = false"
+        @submit="handleSave"
     />
   </div>
 </template>
@@ -141,7 +141,8 @@ onMounted(() => {
 
 .top-bar {
   background-color: var(--header-bg);
-  padding: 1rem 2rem;
+  height: 64px; /* Fixed height to match sidebar logo section */
+  padding: 0 2rem;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
@@ -151,6 +152,12 @@ onMounted(() => {
 .top-bar h1 {
   margin: 0;
   font-size: 1.5rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .content-area {
@@ -230,23 +237,58 @@ onMounted(() => {
   border: 1px solid var(--error-text);
 }
 
+/* New Button Styles */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .btn-primary {
   background-color: #3498db;
   color: white;
-  border: none;
 }
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
 .btn-secondary {
-  background-color: transparent;
-  border: 1px solid #ccc;
+  background-color: var(--input-bg);
   color: var(--text-color);
-  margin-left: 0.5rem;
+  border-color: var(--input-border);
 }
+
+.btn-secondary:hover {
+  background-color: var(--bg-color);
+  border-color: var(--text-color);
+}
+
 .btn-icon {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.2rem;
-  opacity: 0.6;
+  padding: 0.4rem;
+  opacity: 0.7;
+  color: var(--text-muted);
 }
-.btn-icon:hover { opacity: 1; }
+.btn-icon:hover {
+  opacity: 1;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  border-radius: 50%;
+}
+.actions-cell .btn-icon:first-child:hover {
+  color: var(--success-text);
+}
+.actions-cell .btn-icon:last-child:hover {
+  color: var(--error-text);
+}
 </style>
