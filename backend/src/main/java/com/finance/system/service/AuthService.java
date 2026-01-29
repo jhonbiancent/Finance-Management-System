@@ -1,5 +1,7 @@
 package com.finance.system.service;
 
+import com.finance.system.model.Role;
+
 import com.finance.system.dto.AuthRequest;
 import com.finance.system.dto.AuthResponse;
 import com.finance.system.dto.RegisterRequest;
@@ -26,7 +28,7 @@ public class AuthService {
                 .lastname(request.getLastname())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .role(Role.valueOf(request.getRole()))
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

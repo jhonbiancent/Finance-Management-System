@@ -31,7 +31,12 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof com.finance.system.model.User) {
+            com.finance.system.model.User user = (com.finance.system.model.User) userDetails;
+            claims.put("roles", "ROLE_" + user.getRole().name()); // Add ROLE_ prefix
+        }
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(

@@ -13,9 +13,13 @@
       <div class="form-group">
         <label for="role">Role:</label>
         <select id="role" v-model="role" required>
-          <option value="ROLE_MEMBER">Member</option>
-          <option value="ROLE_FINANCE_STAFF">Finance Staff</option>
-          <option value="ROLE_ADMIN">Admin</option>
+          <option value="ACCOUNTS_PAYABLE">Accounts Payable</option>
+          <option value="ACCOUNTS_RECEIVABLE">Accounts Receivable</option>
+          <option value="COLLECTION">Collection</option>
+          <option value="CONTROLLER">Controller</option>
+          <option value="DISBURSEMENT">Disbursement</option>
+          <option value="TREASURER">Treasurer</option>
+          <option value="FINANCE_DIRECTOR">Finance Director (Super Admin)</option>
         </select>
       </div>
       <button type="submit" :disabled="loading">

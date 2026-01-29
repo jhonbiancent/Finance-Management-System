@@ -1,81 +1,36 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import TransactionModal from '../components/TransactionModal.vue'
-import api from '@/services/api'
+import { ref, onMounted } from 'vue';
+import api from '@/services/api';
 
-const transactions = ref([])
-const loading = ref(false)
-const error = ref(null)
-
-const isModalOpen = ref(false)
-const isEditing = ref(false)
-const currentTransaction = ref(null)
+const transactions = ref([]);
+const loading = ref(false);
+const error = ref(null);
 
 const fetchTransactions = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const response = await api.getTransactions()
-    transactions.value = response.data
-    error.value = null
+    const response = await api.getTransactions();
+    transactions.value = response.data;
+    error.value = null;
   } catch (err) {
-    console.error('Failed to fetch transactions:', err)
-    error.value = 'Failed to fetch transactions. Please try again later.'
+    console.error('Failed to fetch transactions:', err);
+    error.value = 'Failed to fetch transactions. Please try again later.';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
-
-const openNewTransactionModal = () => {
-  isEditing.value = false
-  currentTransaction.value = null
-  isModalOpen.value = true
-}
-
-const openEditTransactionModal = (transaction) => {
-  isEditing.value = true
-  currentTransaction.value = transaction
-  isModalOpen.value = true
-}
-
-const handleSave = async (formData) => {
-  try {
-    if (isEditing.value) {
-      await api.updateTransaction(currentTransaction.value.id, formData)
-    } else {
-      await api.createTransaction(formData)
-    }
-    await fetchTransactions()
-    isModalOpen.value = false
-  } catch (e) {
-    alert('Error saving transaction: ' + e.message)
-  }
-}
-
-const handleDelete = async (id) => {
-  if (!confirm('Are you sure you want to delete this transaction?')) return
-  try {
-    await api.deleteTransaction(id)
-    await fetchTransactions()
-  } catch (e) {
-    alert('Error deleting transaction: ' + e.message)
-  }
-}
+};
 
 onMounted(() => {
-  fetchTransactions()
-})
+  fetchTransactions();
+});
 </script>
 
 <template>
   <div class="view-container">
     <header class="top-bar">
-      <form class="search-bar">
-        🔍
-        <input type="text" placeholder="Search">
-        ☰
-      </form>
+      <h1>Transactions</h1>
       <div class="actions">
-        <button class="btn-primary" @click="openNewTransactionModal">+ New Entry</button>
+        <!-- Add/Edit buttons will be added in Phase 3 with role-based logic -->
         <button class="btn-secondary">Export</button>
       </div>
     </header>
@@ -85,58 +40,134 @@ onMounted(() => {
         {{ error }}
       </div>
       
+      <div v-if="loading" class="text-center">Loading...</div>
+
       <div class="spreadsheet-container">
         <table class="spreadsheet">
           <thead>
             <tr>
-              <th>Date</th>
-              <th>OR Number</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th>Type</th>
-              <th class="text-right">Amount</th>
+              <th>ID</th>
+              <th>Subsidiary</th>
+              <th>Disbursement</th>
+              <th>Logistics</th>
+              <th>Product</th>
+              <th>AR</th>
+              <th>Controller</th>
+              <th>AP</th>
+              <th>User</th>
+              <th>Check #</th>
+              <th>Check Date</th>
               <th>Status</th>
-              <th>Actions</th>
+              <th>Balance</th>
+              <th>Due Date</th>
+              <th>Terms (Days)</th>
+              <th>Mode</th>
+              <th>Type</th>
+              <th>Qty</th>
+              <th>Fuel Purchase</th>
+              <th>Invoice #</th>
+              <th>Freight Amt</th>
+              <th>Freight Bill</th>
+              <th>Comm. Name</th>
+              <th>Comm. Amt</th>
+              <th>Comm. On Bill</th>
+              <th>Payments</th>
+              <th>Remarks</th>
+              <th>Backtrack</th>
+              <th>Status 2</th>
+              <th>Status 3</th>
+              <th>Group</th>
+              <th>Revenue Cat.</th>
+              <th>Billing #</th>
+              <th>Description</th>
+              <th>BMMI Customer</th>
+              <th>TIN</th>
+              <th>VAT/Non-VAT</th>
+              <th>VAT Amt</th>
+              <th>Address</th>
+              <th>Gross Sales</th>
+              <th>Discount</th>
+              <th>Net Sales</th>
+              <th>Sales VAT Excl.</th>
+              <th>EWT</th>
+              <th>Service Chg.</th>
+              <th>Stripping Fee</th>
+              <th>Return</th>
+              <th>Interest Inc.</th>
+              <th>Particulars</th>
+              <th>Bank</th>
+              <th>From Bank Sub</th>
+              <th>To Bank Sub</th>
+              <th>Amount</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="t in transactions" :key="t.id">
-              <td>{{ t.date }}</td>
-              <td>{{ t.orNumber }}</td>
-              <td>{{ t.description }}</td>
-              <td><span class="badge">{{ t.category }}</span></td>
-              <td>
-                <span :class="['status', t.type === 'INCOME' ? 'income' : 'expense']">
-                  {{ t.type }}
-                </span>
-              </td>
-              <td class="text-right">{{ t.amount.toFixed(2) }}</td>
+              <td>{{ t.id }}</td>
+              <td>{{ t.subsidiaryName }}</td>
+              <td>{{ t.disbursementName }}</td>
+              <td>{{ t.logisticsInfo }}</td>
+              <td>{{ t.productName }}</td>
+              <td>{{ t.accountsReceivableName }}</td>
+              <td>{{ t.controllerName }}</td>
+              <td>{{ t.accountsPayableName }}</td>
+              <td>{{ t.userName }}</td>
+              <td>{{ t.checkNumber }}</td>
+              <td>{{ t.checkDate }}</td>
               <td>{{ t.status }}</td>
-              <td class="actions-cell">
-                <button class="btn-icon" @click="openEditTransactionModal(t)">✏️</button>
-                <button class="btn-icon" @click="handleDelete(t.id)">🗑️</button>
-              </td>
+              <td>{{ t.balance }}</td>
+              <td>{{ t.dueDate }}</td>
+              <td>{{ t.termsOfDays }}</td>
+              <td>{{ t.mode }}</td>
+              <td>{{ t.type }}</td>
+              <td>{{ t.quantity }}</td>
+              <td>{{ t.fuelPurchase }}</td>
+              <td>{{ t.invoiceBillingNumber }}</td>
+              <td>{{ t.freightAmount }}</td>
+              <td>{{ t.freightBilling }}</td>
+              <td>{{ t.commissionName }}</td>
+              <td>{{ t.commissionAmount }}</td>
+              <td>{{ t.commissionOnBilling }}</td>
+              <td>{{ t.payments }}</td>
+              <td>{{ t.remarks }}</td>
+              <td>{{ t.backtrack }}</td>
+              <td>{{ t.status2 }}</td>
+              <td>{{ t.status3 }}</td>
+              <td>{{ t.group }}</td>
+              <td>{{ t.revenueCategory }}</td>
+              <td>{{ t.billingNumber }}</td>
+              <td>{{ t.description }}</td>
+              <td>{{ t.bmmiCustomer }}</td>
+              <td>{{ t.tin }}</td>
+              <td>{{ t.vatNonvat }}</td>
+              <td>{{ t.vat }}</td>
+              <td>{{ t.address }}</td>
+              <td>{{ t.grossSales }}</td>
+              <td>{{ t.discount }}</td>
+              <td>{{ t.netSales }}</td>
+              <td>{{ t.salesVatExclusive }}</td>
+              <td>{{ t.ewt }}</td>
+              <td>{{ t.serviceCharge }}</td>
+              <td>{{ t.strippingFee }}</td>
+              <td>{{ t.returnValue }}</td>
+              <td>{{ t.interestIncome }}</td>
+              <td>{{ t.particulars }}</td>
+              <td>{{ t.bank }}</td>
+              <td>{{ t.fromBankSub }}</td>
+              <td>{{ t.toBankSub }}</td>
+              <td>{{ t.amount }}</td>
             </tr>
             <tr v-if="transactions.length === 0 && !loading">
-              <td colspan="8" class="text-center">No transactions found.</td>
+              <td :colspan="52" class="text-center">No transactions found.</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-
-    <TransactionModal 
-      :is-open="isModalOpen"
-      :is-editing="isEditing"
-      :initial-data="currentTransaction"
-      @close="isModalOpen = false"
-      @submit="handleSave"
-    />
   </div>
 </template>
 
 <style scoped>
-/* Reuse styles from App.vue but scoped to this view */
 .view-container {
   display: flex;
   flex-direction: column;
@@ -162,28 +193,12 @@ onMounted(() => {
   padding: 2rem;
   overflow-y: auto;
 }
-/*------search bar------*/
-.search-bar{
-  width:50%;
-  height:100%;
-  padding:1%;
-  background-color:var(--bg-color);
-  border-radius:1rem;
-  display: flex;
-  align-items:center;
-  justify-content:start;
-  gap:2%;
-}
-.search-bar input{
-  height:100%;
-  width:70%;
-  border:none;
-}
+
 .spreadsheet-container {
   background: var(--card-bg);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  overflow: hidden;
+  overflow-x: auto; /* Enable horizontal scrolling */
   border: 1px solid var(--border-color);
   color: var(--text-color);
 }
@@ -191,11 +206,12 @@ onMounted(() => {
 .spreadsheet {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  white-space: nowrap; /* Prevent table cell content from wrapping */
 }
 
 .spreadsheet th, .spreadsheet td {
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-color);
@@ -208,6 +224,8 @@ onMounted(() => {
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.5px;
+  position: sticky;
+  top: 0;
 }
 
 .spreadsheet tr:last-child td {
@@ -218,25 +236,7 @@ onMounted(() => {
   background-color: var(--bg-color);
 }
 
-.text-right { text-align: right; }
 .text-center { text-align: center; }
-
-.status {
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-//.status.income { background-color: var(--success-bg); color: var(--success-text); }
-//.status.expense { background-color: var(--error-bg); color: var(--error-text); }
-
-.badge {
-  background-color: var(--input-bg);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  color: var(--text-color);
-}
 
 .banner {
   padding: 1rem;
@@ -250,23 +250,10 @@ onMounted(() => {
   border: 1px solid var(--error-text);
 }
 
-.btn-primary {
-  background-color: #3498db;
-  color: white;
-  border: none;
-}
 .btn-secondary {
   background-color: transparent;
   border: 1px solid #ccc;
   color: var(--text-color);
   margin-left: 0.5rem;
 }
-.btn-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.2rem;
-  opacity: 0.6;
-}
-.btn-icon:hover { opacity: 1; }
 </style>

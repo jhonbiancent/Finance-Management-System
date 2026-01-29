@@ -9,9 +9,8 @@ export const useAuthStore = defineStore('auth', {
   }),
   getters: {
     isAuthenticated: (state) => !!state.token,
-    isAdmin: (state) => state.user && state.user.roles.includes('ROLE_ADMIN'),
-    isFinanceStaff: (state) => state.user && state.user.roles.includes('ROLE_FINANCE_STAFF'),
-    isMember: (state) => state.user && state.user.roles.includes('ROLE_MEMBER'),
+    isAdmin: (state) => state.user && state.user.roles.includes('ROLE_FINANCE_DIRECTOR'),
+    hasRole: (state) => (role) => state.user && state.user.roles.includes(role),
   },
   actions: {
     async login(credentials) {
@@ -22,8 +21,9 @@ export const useAuthStore = defineStore('auth', {
 
         const user = {
             sub: decodedToken.sub,
-            roles: decodedToken.roles || []
+            roles: decodedToken.roles ? [decodedToken.roles] : [] // Ensure roles is an array
         };
+
 
         this.token = token;
         this.user = user;
